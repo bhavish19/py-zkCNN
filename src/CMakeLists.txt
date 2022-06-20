@@ -8,3 +8,6 @@ target_link_libraries(demo_vgg_run cnn_lib hyrax_lib mcl mclbn384_256)
 
 add_executable(demo_lenet_run main_demo_lenet.cpp)
 target_link_libraries(demo_lenet_run cnn_lib hyrax_lib mcl mclbn384_256)
+
+add_executable(demo_alexnet_run main_demo_alexnet.cpp)
+target_link_libraries(demo_alexnet_run cnn_lib hyrax_lib mcl mclbn384_256)

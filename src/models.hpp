@@ -45,6 +45,13 @@ public:
                         const std::string &i_filename, const string &c_filename, const std::string &o_filename);
 };
 
+class alexnetCifar: public neuralNetwork {
+public:
+    explicit alexnetCifar(i64 psize_x, i64 psize_y, i64 pchannel, i64 pparallel, poolType pool_ty,
+                        const std::string &i_filename, const string &c_filename, const std::string &o_filename);
+};
+
+
 class ccnn: public neuralNetwork {
 public:
     explicit ccnn(i64 psize_x, i64 psize_y, i64 pparallel, i64 pchannel, poolType pool_ty);
