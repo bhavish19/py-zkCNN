@@ -12,20 +12,18 @@
 #define INPUT_FILE_ID 1     // the input filename
 #define CONFIG_FILE_ID 2    // the config filename
 #define OUTPUT_FILE_ID 3    // the input filename
-#define NETWORK_FILE_ID 4   // the configuration of alexnet
-#define PIC_CNT 5           // the number of picture paralleled
+#define PIC_CNT 4           // the number of picture paralleled/batch size
 
 vector<std::string> output_tb(16, "");
 
 int main(int argc, char **argv) {
     initPairing(mcl::BLS12_381);
 
-    char i_filename[500], c_filename[500], o_filename[500], n_filename[500];
+    char i_filename[500], c_filename[500], o_filename[500];
 
     strcpy(i_filename, argv[INPUT_FILE_ID]);
     strcpy(c_filename, argv[CONFIG_FILE_ID]);
     strcpy(o_filename, argv[OUTPUT_FILE_ID]);
-    strcpy(n_filename, argv[NETWORK_FILE_ID]);
 
     int pic_cnt = atoi(argv[PIC_CNT]);
 
@@ -34,7 +32,7 @@ int main(int argc, char **argv) {
     output_tb[PCNT_OUT_ID] = std::to_string(pic_cnt);
 
     prover p;
-    alexnetCifar nn(224, 224, 3, pic_cnt, MAX, i_filename, c_filename, o_filename);//, n_filename);
+    alexnetCifar nn(224, 224, 3, pic_cnt, MAX, i_filename, c_filename, o_filename);
     nn.create(p, false);
     verifier v(&p, p.C);
     v.verify();
