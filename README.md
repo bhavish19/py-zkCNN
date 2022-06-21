@@ -1,5 +1,13 @@
 # zkCNN
 
+# Install on Ubuntu 
+
+```
+git clone --recurse-submodules https://github.com/vio1etus/zkCNN_complete.git
+sudo apt-get update
+sudo apt-get install libgmp3-dev camke gcc g++
+```
+
 ## Introduction
 
 This is the implementation of [this paper](https://eprint.iacr.org/2021/673), which is a GKR-based zero-knowledge proof for CNN reference, containing some common CNN models such as LeNet5, vgg11 and vgg16.
@@ -26,7 +34,6 @@ This part is the picture data, a vector reshaped from its original matrix by
 
 where ![formula2](https://render.githubusercontent.com/render/math?math=ch_{in}) is the number of channel, ![formula3](https://render.githubusercontent.com/render/math?math=h) is the height, ![formula4](https://render.githubusercontent.com/render/math?math=w) is the width.
 
-config.csv only convolutional layer and pooling layer， full-connected layer is not included
 ### Weight Part
 
 This part is the set of parameters in the neural network, which contains
