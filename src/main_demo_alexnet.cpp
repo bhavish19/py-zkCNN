@@ -12,7 +12,7 @@
 #define INPUT_FILE_ID 1     // the input filename
 #define CONFIG_FILE_ID 2    // the config filename
 #define OUTPUT_FILE_ID 3    // the input filename
-#define NETWORK_FILE_ID 4   // the configuration of vgg
+#define NETWORK_FILE_ID 4   // the configuration of alexnet
 #define PIC_CNT 5           // the number of picture paralleled
 
 // 网络结构层数: AlexNet 8层
@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
     output_tb[PCNT_OUT_ID] = std::to_string(pic_cnt);
 
     prover p;
-    alexnetCifar nn(32, 32, 3, pic_cnt, MAX, i_filename, c_filename, o_filename);//, n_filename);
+    alexnetCifar nn(224, 224, 3, pic_cnt, MAX, i_filename, c_filename, o_filename);//, n_filename);
     nn.create(p, false);
     verifier v(&p, p.C);
     v.verify();
