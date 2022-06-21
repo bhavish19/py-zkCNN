@@ -15,8 +15,7 @@
 #define NETWORK_FILE_ID 4   // the configuration of alexnet
 #define PIC_CNT 5           // the number of picture paralleled
 
-// 网络结构层数: AlexNet 8层
-vector<std::string> output_tb(8, "");
+vector<std::string> output_tb(16, "");
 
 int main(int argc, char **argv) {
     initPairing(mcl::BLS12_381);
