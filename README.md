@@ -5,7 +5,7 @@
 ```
 git clone --recurse-submodules https://github.com/vio1etus/zkCNN_complete.git
 sudo apt-get update
-sudo apt-get install libgmp3-dev camke gcc g++
+sudo apt-get install libgmp3-dev cmake gcc g++
 ```
 
 ## Introduction
