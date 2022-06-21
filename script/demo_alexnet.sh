@@ -16,5 +16,4 @@ alexnet_c=../data/alexnet/alexnet.cifar.relu-1-scale-zeropoint-uint8.csv
 alexnet_o=../output/single/alexnet.cifar.relu-1-infer.csv
 alexnet_n=../data/alexnet/alexnet-config.csv
 
-# ${run_file} ${alexnet_i} ${alexnet_c} ${alexnet_o} ${alexnet_n} 1 > ${out_file}
 ${run_file} ${alexnet_i} ${alexnet_c} ${alexnet_o} 1 > ${out_file}
