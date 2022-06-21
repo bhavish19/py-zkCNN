@@ -188,9 +188,10 @@ lenet::lenet(i64 psize_x, i64 psize_y, i64 pchannel, i64 pparallel, poolType poo
 lenetCifar::lenetCifar(i64 psize_x, i64 psize_y, i64 pchannel, i64 pparallel, poolType pool_ty,
                        const std::string &i_filename, const string &c_filename, const std::string &o_filename)
         : neuralNetwork(psize_x, psize_y, pchannel, pparallel, i_filename, c_filename, o_filename) {
-    conv_section.resize(3);
+    conv_section.resize(3); // number of conv layer + 1
 
     i64 kernel_size = 5;
+    // TODO: parallel picture count,what? choose conv_ty：FFT or NAIVE_FAST
     convType conv_ty = kernel_size > 3 || pparallel > 1 ? FFT : NAIVE_FAST;
 
     conv_section[0].emplace_back(conv_ty, 6, pchannel, kernel_size, 0, 0);
@@ -209,7 +210,7 @@ alexnetCifar::alexnetCifar(i64 psize_x, i64 psize_y, i64 pchannel, i64 pparallel
                        const std::string &i_filename, const string &c_filename, const std::string &o_filename)
         : neuralNetwork(psize_x, psize_y, pchannel, pparallel, i_filename, c_filename, o_filename) {
     assert(psize_x == psize_y);
-    conv_section.resize(5);
+    conv_section.resize(6);
 
     i64 kernel_size = 5;
     convType conv_ty = kernel_size > 3 || pparallel > 1 ? FFT : NAIVE_FAST;
@@ -229,8 +230,9 @@ alexnetCifar::alexnetCifar(i64 psize_x, i64 psize_y, i64 pchannel, i64 pparallel
     conv_section[4].emplace_back(conv_ty, 256, 384, kernel_size, 0, 0);
     pool.emplace_back(pool_ty, 2, 1);
 
-    conv_section[5].emplace_back(conv_ty, 4096, 384, kernel_size, 0, 0);
-
+    conv_section[5].emplace_back(conv_ty, 4096, 256, kernel_size, 0, 0);
+    
+    full_conn.emplace_back(4096, 4096);
     full_conn.emplace_back(1000, 4096);
     full_conn.emplace_back(10, 1000);
 }

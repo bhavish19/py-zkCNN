@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
     output_tb[PCNT_OUT_ID] = std::to_string(pic_cnt);
 
     prover p;
-    alexnetCIFAR nn(32, 32, 3, pic_cnt, i_filename, c_filename, o_filename, n_filename);
+    alexnetCifar nn(32, 32, 3, pic_cnt, MAX, i_filename, c_filename, o_filename);//, n_filename);
     nn.create(p, false);
     verifier v(&p, p.C);
     v.verify();
