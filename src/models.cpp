@@ -210,33 +210,31 @@ alexnetCifar::alexnetCifar(i64 psize_x, i64 psize_y, i64 pchannel, i64 pparallel
                        const std::string &i_filename, const string &c_filename, const std::string &o_filename)
         : neuralNetwork(psize_x, psize_y, pchannel, pparallel, i_filename, c_filename, o_filename) {
     assert(psize_x == psize_y);
-    conv_section.resize(6);
+    conv_section.resize(5);
 
     i64 kernel_size = 11;
     convType conv_ty = kernel_size > 3 || pparallel > 1 ? FFT : NAIVE_FAST;
 
-    conv_section[0].emplace_back(conv_ty, 96, pchannel, kernel_size, 0, 0);
+    conv_section[0].emplace_back(conv_ty, 64, pchannel, kernel_size, 0, 0);
     pool.emplace_back(pool_ty, 2, 1);
     
     kernel_size = 5;
-    conv_section[1].emplace_back(conv_ty, 256, 96, kernel_size, 0, 0);
+    conv_section[1].emplace_back(conv_ty, 192, 64, kernel_size, 0, 0);
     pool.emplace_back(pool_ty, 2, 1);
 
     kernel_size = 3;
     conv_ty = kernel_size > 3 || pparallel > 1 ? FFT : NAIVE_FAST;
 
-    conv_section[2].emplace_back(conv_ty, 384, 256, kernel_size, 0, 0);
+    conv_section[2].emplace_back(conv_ty, 384, 192, kernel_size, 0, 0);
     pool.emplace_back(pool_ty, 2, 1);
     
-    conv_section[3].emplace_back(conv_ty, 384, 384, kernel_size, 0, 0);
+    conv_section[3].emplace_back(conv_ty, 256, 384, kernel_size, 0, 0);
     pool.emplace_back(pool_ty, 2, 1);
 
-    conv_section[4].emplace_back(conv_ty, 256, 384, kernel_size, 0, 0);
+    conv_section[4].emplace_back(conv_ty, 256, 256, kernel_size, 0, 0);
     pool.emplace_back(pool_ty, 2, 1);
-
-    conv_section[5].emplace_back(conv_ty, 4096, 256, kernel_size, 0, 0);
     
-    full_conn.emplace_back(4096, 6400);
+    full_conn.emplace_back(4096, 9216);
     full_conn.emplace_back(4096, 4096);
     full_conn.emplace_back(10, 4096);
 }
