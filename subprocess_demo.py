@@ -32,20 +32,18 @@ def check_binary():
         else:
             print("❌ C++ binary not found")
             print("\nTo build the C++ binary:")
-            print("1. Make sure you have a C++ compiler installed")
-            print("2. Run: mkdir cmake-build-release")
-            print("3. Run: cd cmake-build-release")
-            print("4. Run: cmake ..")
-            print("5. Run: cmake --build .")
+            print("1. Make sure you have WSL installed")
+            print("2. Run: wsl -e bash -c \"cd /mnt/c/Users/BhavishMohee/Desktop/Master\\'s\\ Dissertation/zkCNN_complete && cd script && bash demo_lenet.sh\"")
+            print("3. This will build the binaries automatically")
             return False
             
     except ImportError as e:
         print(f"❌ Error importing wrapper: {e}")
         return False
 
-def demo_wrapper_class():
-    """Demonstrate using the ZKCNNSubprocessWrapper class"""
-    print("\n=== ZKCNNSubprocessWrapper Class Demo ===")
+def demo_lenet():
+    """Demonstrate using the ZKCNNSubprocessWrapper class for LeNet"""
+    print("\n=== LeNet Demo ===")
     
     try:
         from zkcnn_subprocess_wrapper import ZKCNNSubprocessWrapper
@@ -55,47 +53,28 @@ def demo_wrapper_class():
         print(f"✅ Wrapper created successfully")
         print(f"Binary path: {wrapper.binary_path}")
         
-        # Define file paths (Windows format)
-        current_dir = Path(__file__).parent
-        input_file = str(current_dir / "data" / "lenet5.mnist.relu.max" / "lenet5.mnist.relu.max-1-images-weights-qint8.csv")
-        config_file = str(current_dir / "data" / "lenet5.mnist.relu.max" / "lenet5.mnist.relu.max-1-scale-zeropoint-uint8.csv")
-        output_file = str(current_dir / "output" / "single" / "lenet5.mnist.relu.max-1-infer.csv")
+        # Use default file paths (same as C++ script)
+        print("✅ Using default data files (same as C++ script)")
+        print("Input file: data/lenet5.mnist.relu.max/lenet5.mnist.relu.max-1-images-weights-qint8.csv")
+        print("Config file: data/lenet5.mnist.relu.max/lenet5.mnist.relu.max-1-scale-zeropoint-uint8.csv")
+        print("Output file: output/single/lenet5.mnist.relu.max-1-infer.csv")
         
-        # Convert to WSL paths
-        input_file_wsl = convert_to_wsl_path(input_file)
-        config_file_wsl = convert_to_wsl_path(config_file)
-        output_file_wsl = convert_to_wsl_path(output_file)
-        
-        # Create output directory
-        os.makedirs(os.path.dirname(output_file), exist_ok=True)
-        
-        # Check if files exist
-        if not os.path.exists(input_file) or not os.path.exists(config_file):
-            print("❌ Input files not found. Please make sure the data is extracted.")
-            return False
-        
-        print("✅ Input files found")
-        print(f"Input file: {input_file}")
-        print(f"Config file: {config_file}")
-        print(f"Output file: {output_file}")
-        print(f"WSL Input file: {input_file_wsl}")
-        print(f"WSL Config file: {config_file_wsl}")
-        print(f"WSL Output file: {output_file_wsl}")
-        
-        # Run the demo with WSL paths
+        # Run the demo with default paths
         print("\nRunning LeNet demo...")
-        result = wrapper.run_lenet_demo(input_file_wsl, config_file_wsl, output_file_wsl, 1)
+        result = wrapper.run_lenet_demo()
         
         # Display results
-        print(f"\n=== Demo Results ===")
+        print(f"\n=== LeNet Demo Results ===")
         print(f"Success: {result['success']}")
         if 'return_code' in result:
             print(f"Return code: {result['return_code']}")
         print(f"Execution time: {result['execution_time']:.4f} seconds")
         
         if result.get('stdout'):
-            print(f"\n=== Output ===")
-            print(result['stdout'])
+            print(f"\n=== Output (last 10 lines) ===")
+            lines = result['stdout'].strip().split('\n')
+            for line in lines[-10:]:
+                print(f"  {line}")
         
         if result.get('stderr'):
             print(f"\n=== Error Output ===")
@@ -103,44 +82,96 @@ def demo_wrapper_class():
         
         # Check verification
         print(f"\n=== Verification ===")
-        verification_result = wrapper.verify_proof(input_file_wsl, config_file_wsl, output_file_wsl, 1)
+        verification_result = wrapper.verify_proof(None, None, None, 1, "lenet")
         print(f"Proof verification: {'✅ Success' if verification_result else '❌ Failed'}")
         
         return result['success']
         
     except Exception as e:
-        print(f"❌ Error in demo: {e}")
+        print(f"❌ Error in LeNet demo: {e}")
         return False
+
+def demo_vgg():
+    """Demonstrate using the ZKCNNSubprocessWrapper class for VGG"""
+    print("\n=== VGG Demo ===")
+    
+    try:
+        from zkcnn_subprocess_wrapper import ZKCNNSubprocessWrapper
+        
+        # Create wrapper instance
+        wrapper = ZKCNNSubprocessWrapper()
+        print(f"✅ Wrapper created successfully")
+        print(f"Binary path: {wrapper.binary_path}")
+        
+        # Use default file paths (same as C++ script)
+        print("✅ Using default data files (same as C++ script)")
+        print("Input file: data/vgg11/vgg11.cifar.relu-1-images-weights-qint8.csv")
+        print("Config file: data/vgg11/vgg11.cifar.relu-1-scale-zeropoint-uint8.csv")
+        print("Network file: data/vgg11/vgg11-config.csv")
+        print("Output file: output/single/vgg11.cifar.relu-1-infer.csv")
+        
+        # Run the demo with default paths
+        print("\nRunning VGG demo...")
+        result = wrapper.run_vgg_demo()
+        
+        # Display results
+        print(f"\n=== VGG Demo Results ===")
+        print(f"Success: {result['success']}")
+        if 'return_code' in result:
+            print(f"Return code: {result['return_code']}")
+        print(f"Execution time: {result['execution_time']:.4f} seconds")
+        
+        if result.get('stdout'):
+            print(f"\n=== Output (last 10 lines) ===")
+            lines = result['stdout'].strip().split('\n')
+            for line in lines[-10:]:
+                print(f"  {line}")
+        
+        if result.get('stderr'):
+            print(f"\n=== Error Output ===")
+            print(result['stderr'])
+        
+        # Check verification
+        print(f"\n=== Verification ===")
+        verification_result = wrapper.verify_proof(None, None, None, 1, "vgg")
+        print(f"Proof verification: {'✅ Success' if verification_result else '❌ Failed'}")
+        
+        return result['success']
+        
+    except Exception as e:
+        print(f"❌ Error in VGG demo: {e}")
+        return False
+
+def demo_wrapper_class():
+    """Demonstrate using the ZKCNNSubprocessWrapper class"""
+    print("\n=== ZKCNNSubprocessWrapper Class Demo ===")
+    
+    # Run both demos
+    lenet_success = demo_lenet()
+    vgg_success = demo_vgg()
+    
+    return lenet_success and vgg_success
 
 def demo_function_call():
     """Demonstrate using the simple function call"""
     print("\n=== Function Call Demo ===")
     
     try:
-        from zkcnn_subprocess_wrapper import run_lenet_demo_simple
+        from zkcnn_subprocess_wrapper import run_lenet_demo_simple, run_vgg_demo_simple
         
-        # Define file paths (Windows format)
-        current_dir = Path(__file__).parent
-        input_file = str(current_dir / "data" / "lenet5.mnist.relu.max" / "lenet5.mnist.relu.max-1-images-weights-qint8.csv")
-        config_file = str(current_dir / "data" / "lenet5.mnist.relu.max" / "lenet5.mnist.relu.max-1-scale-zeropoint-uint8.csv")
-        output_file = str(current_dir / "output" / "single" / "lenet5.mnist.relu.max-1-infer.csv")
+        print("Running LeNet demo with simple function call (using default files)...")
+        lenet_result = run_lenet_demo_simple()
         
-        # Convert to WSL paths
-        input_file_wsl = convert_to_wsl_path(input_file)
-        config_file_wsl = convert_to_wsl_path(config_file)
-        output_file_wsl = convert_to_wsl_path(output_file)
-        
-        # Create output directory
-        os.makedirs(os.path.dirname(output_file), exist_ok=True)
-        
-        print("Running LeNet demo with simple function call...")
-        result = run_lenet_demo_simple(input_file_wsl, config_file_wsl, output_file_wsl, 1)
+        print("Running VGG demo with simple function call (using default files)...")
+        vgg_result = run_vgg_demo_simple()
         
         print(f"\n=== Function Call Results ===")
-        print(f"Success: {result['success']}")
-        print(f"Execution time: {result['execution_time']:.4f} seconds")
+        print(f"LeNet Success: {lenet_result['success']}")
+        print(f"LeNet Execution time: {lenet_result['execution_time']:.4f} seconds")
+        print(f"VGG Success: {vgg_result['success']}")
+        print(f"VGG Execution time: {vgg_result['execution_time']:.4f} seconds")
         
-        return result['success']
+        return lenet_result['success'] and vgg_result['success']
         
     except Exception as e:
         print(f"❌ Error in function call demo: {e}")
@@ -150,13 +181,14 @@ def compare_approaches():
     """Compare different approaches"""
     print("\n=== Comparison of Approaches ===")
     
-    print("Subprocess Wrapper:")
+    print("Subprocess Wrapper (WSL):")
     print("✅ No compilation required")
     print("✅ Uses existing C++ binaries")
     print("✅ Full C++ performance")
     print("✅ Real cryptographic security")
     print("✅ Easy Python integration")
-    print("⚠️ Requires C++ binary to be built separately")
+    print("✅ Works on Windows with WSL")
+    print("⚠️ Requires WSL and C++ binary to be built")
     
     print("\nPython Extension Wrapper:")
     print("✅ Direct Python integration")
@@ -177,7 +209,7 @@ def main():
     """Main demo function"""
     print("=== ZKCNN Subprocess Wrapper Demo ===")
     print("This demo shows how to use the C++ ZKCNN binaries from Python")
-    print("without building Python extensions.")
+    print("without building Python extensions, using WSL.")
     print()
     
     # Check if binary exists
@@ -208,7 +240,10 @@ def main():
         print("\nExample usage:")
         print("from zkcnn_subprocess_wrapper import ZKCNNSubprocessWrapper")
         print("wrapper = ZKCNNSubprocessWrapper()")
+        print("# Run LeNet demo")
         print("result = wrapper.run_lenet_demo('input.csv', 'config.csv', 'output.csv')")
+        print("# Run VGG demo")
+        print("result = wrapper.run_vgg_demo('input.csv', 'config.csv', 'output.csv', 'network.csv')")
         print("print(f'Success: {result[\"success\"]}')")
     else:
         print("\n❌ Some demos failed. Check the error messages above.")
