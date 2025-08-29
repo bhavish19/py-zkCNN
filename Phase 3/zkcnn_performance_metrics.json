@@ -1,7 +1,7 @@
 {
-  "total_runtime": 43.486480474472046,
-  "prover_time": 0.10691618919372559,
-  "verifier_time": 0.0,
+  "total_runtime": 247.46222066879272,
+  "prover_time": 0.012761592864990234,
+  "verifier_time": 9.036064147949219e-05,
   "proof_sizes": {
     "hyrax_avg_kb": 0.16733870967741934,
     "gkr_avg_kb": 0,
