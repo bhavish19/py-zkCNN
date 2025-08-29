@@ -1,0 +1,107 @@
+{
+  "total_runtime": 0.08239197731018066,
+  "field_operations": {
+    "total_count": 100,
+    "total_time": 0.01863718032836914,
+    "operations": {
+      "add": {
+        "count": 100,
+        "total_time": 0.01863718032836914,
+        "avg_time_ms": 0.1863718032836914,
+        "ops_per_second": 5365.618523730332
+      },
+      "mul": {
+        "count": 0,
+        "total_time": 0.0,
+        "avg_time_ms": 0.0,
+        "ops_per_second": 0
+      },
+      "sub": {
+        "count": 0,
+        "total_time": 0.0,
+        "avg_time_ms": 0.0,
+        "ops_per_second": 0
+      },
+      "inv": {
+        "count": 0,
+        "total_time": 0.0,
+        "avg_time_ms": 0.0,
+        "ops_per_second": 0
+      },
+      "random": {
+        "count": 0,
+        "total_time": 0.0,
+        "avg_time_ms": 0.0,
+        "ops_per_second": 0
+      }
+    }
+  },
+  "polynomial_operations": {
+    "total_count": 10,
+    "total_time": 0.011186599731445312,
+    "operations": {
+      "creation": {
+        "count": 10,
+        "total_time": 0.011186599731445312,
+        "avg_time_ms": 1.1186599731445312
+      },
+      "evaluation": {
+        "count": 0,
+        "total_time": 0.0,
+        "avg_time_ms": 0.0
+      },
+      "commitment": {
+        "count": 0,
+        "total_time": 0.0,
+        "avg_time_ms": 0.0
+      }
+    }
+  },
+  "protocol_operations": {
+    "total_count": 5,
+    "total_time": 0.050993919372558594,
+    "operations": {
+      "hyrax_commit": {
+        "count": 5,
+        "total_time": 0.050993919372558594,
+        "avg_time_ms": 10.198783874511719
+      },
+      "hyrax_evaluate": {
+        "count": 0,
+        "total_time": 0.0,
+        "avg_time_ms": 0.0
+      },
+      "hyrax_verify": {
+        "count": 0,
+        "total_time": 0.0,
+        "avg_time_ms": 0.0
+      },
+      "gkr_setup": {
+        "count": 0,
+        "total_time": 0.0,
+        "avg_time_ms": 0.0
+      },
+      "gkr_prove": {
+        "count": 0,
+        "total_time": 0.0,
+        "avg_time_ms": 0.0
+      },
+      "gkr_verify": {
+        "count": 0,
+        "total_time": 0.0,
+        "avg_time_ms": 0.0
+      }
+    }
+  },
+  "proof_sizes": {
+    "hyrax_avg_kb": 2.0,
+    "gkr_avg_kb": 1.5,
+    "total_avg_kb": 1.75,
+    "total_proofs": 2
+  },
+  "memory_usage": {
+    "field_elements": 1000,
+    "polynomials": 50,
+    "commitments": 25
+  }
+}
