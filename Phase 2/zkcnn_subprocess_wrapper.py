@@ -32,12 +32,12 @@ class ZKCNNSubprocessWrapper:
     def _find_binary(self) -> str:
         """Find the C++ binary automatically"""
         possible_paths = [
-            "cmake-build-release/src/demo_lenet_run",
-            "cmake-build-release/src/demo_vgg_run", 
-            "cmake-build-release/src/demo_alexnet_run",
-            "build/src/demo_lenet_run",
-            "build/src/demo_vgg_run",
-            "build/src/demo_alexnet_run",
+            "../cmake-build-release/src/demo_lenet_run",
+            "../cmake-build-release/src/demo_vgg_run", 
+            "../cmake-build-release/src/demo_alexnet_run",
+            "../build/src/demo_lenet_run",
+            "../build/src/demo_vgg_run",
+            "../build/src/demo_alexnet_run",
             "demo_lenet_run",
             "demo_vgg_run",
             "demo_alexnet_run"
@@ -284,8 +284,8 @@ class ZKCNNSubprocessWrapper:
     def _find_lenet_binary(self) -> str:
         """Find the LeNet binary specifically"""
         possible_paths = [
-            "cmake-build-release/src/demo_lenet_run",
-            "build/src/demo_lenet_run",
+            "../cmake-build-release/src/demo_lenet_run",
+            "../build/src/demo_lenet_run",
             "demo_lenet_run"
         ]
         
@@ -302,8 +302,8 @@ class ZKCNNSubprocessWrapper:
     def _find_vgg_binary(self) -> str:
         """Find the VGG binary specifically"""
         possible_paths = [
-            "cmake-build-release/src/demo_vgg_run",
-            "build/src/demo_vgg_run",
+            "../cmake-build-release/src/demo_vgg_run",
+            "../build/src/demo_vgg_run",
             "demo_vgg_run"
         ]
         

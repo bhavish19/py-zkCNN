@@ -422,10 +422,24 @@ class DataLoader:
             with open(file_path, 'r') as f:
                 lines = f.readlines()
             
-            # Parse the data (assuming tab-separated values)
+            # Parse the data (handling both float and int values)
             data = []
             for line in lines[:num_samples]:
-                values = [int(x) for x in line.strip().split('\t')]
+                # Split by tabs and handle both float and int values
+                values = []
+                for x in line.strip().split('\t'):
+                    try:
+                        # Try to convert to float first, then to int if needed
+                        float_val = float(x)
+                        # Convert to int8 range (-128 to 127)
+                        int_val = max(-128, min(127, int(round(float_val * 127))))
+                        values.append(int_val)
+                    except ValueError:
+                        # If conversion fails, try direct int conversion
+                        try:
+                            values.append(int(x))
+                        except ValueError:
+                            values.append(0)  # Default fallback
                 data.append(values)
             
             return np.array(data)
@@ -909,6 +923,13 @@ def demo_zk_cnn_with_real_data():
     lenet_scale_file = "data/lenet5.mnist.relu.max/lenet5.mnist.relu.max-1-scale-zeropoint-uint8.csv"
     lenet_data_file = "data/lenet5.mnist.relu.max/lenet5.mnist.relu.max-1-images-weights-qint8.csv"
     
+    # Test VGG16 with VGG11 data (compatible format)
+    print("=== Testing VGG16 with VGG11 Data ===")
+    
+    # Load scale and zeropoint for VGG11 (can be used for VGG16)
+    vgg_scale_file = "../data/vgg11/vgg11.cifar.relu-1-scale-zeropoint-uint8.csv"
+    vgg_data_file = "../data/vgg11/vgg11.cifar.relu-1-images-weights-qint8.csv"
+    
     if os.path.exists(lenet_scale_file):
         scales, zeropoints = DataLoader.load_scale_zeropoint(lenet_scale_file)
         print(f"Loaded {len(scales)} scale/zeropoint pairs for LeNet")
@@ -919,7 +940,14 @@ def demo_zk_cnn_with_real_data():
             print(f"Loaded quantized data shape: {quantized_data.shape}")
             
             # Convert to tensor and reshape for LeNet
-            input_data = torch.tensor(quantized_data[0], dtype=torch.float32).reshape(1, 1, 28, 28)
+            # Check if we have enough data for 28x28 (784 elements) or 32x32 (1024 elements)
+            if len(quantized_data[0]) >= 1024:
+                # Use first 784 elements for 28x28 MNIST format
+                input_data = torch.tensor(quantized_data[0][:784], dtype=torch.float32).reshape(1, 1, 28, 28)
+            else:
+                # Pad or truncate to get 784 elements
+                data_padded = quantized_data[0] + [0] * (784 - len(quantized_data[0]))
+                input_data = torch.tensor(data_padded[:784], dtype=torch.float32).reshape(1, 1, 28, 28)
             
             # Create LeNet model
             model = ZKCNN("lenet")
@@ -967,6 +995,73 @@ def demo_zk_cnn_with_real_data():
             print("❌ LeNet data file not found, using random data")
     else:
         print("❌ LeNet scale file not found, using random data")
+    
+    # Test VGG16 with VGG11 data
+    if os.path.exists(vgg_scale_file):
+        scales, zeropoints = DataLoader.load_scale_zeropoint(vgg_scale_file)
+        print(f"Loaded {len(scales)} scale/zeropoint pairs for VGG16")
+        
+        # Load quantized data
+        if os.path.exists(vgg_data_file):
+            quantized_data = DataLoader.load_quantized_data(vgg_data_file, num_samples=1)
+            print(f"Loaded quantized data shape: {quantized_data.shape}")
+            
+            # Convert to tensor and reshape for VGG16 (3x32x32)
+            # Check if we have enough data for CIFAR format (3072 elements)
+            if len(quantized_data[0]) >= 3072:
+                # Use first 3072 elements for CIFAR format (3x32x32)
+                input_data = torch.tensor(quantized_data[0][:3072], dtype=torch.float32).reshape(1, 3, 32, 32)
+            else:
+                # Pad or truncate to get 3072 elements
+                data_padded = quantized_data[0] + [0] * (3072 - len(quantized_data[0]))
+                input_data = torch.tensor(data_padded[:3072], dtype=torch.float32).reshape(1, 3, 32, 32)
+            
+            # Create VGG16 model
+            model = ZKCNN("vgg16")
+            
+            print(f"Input shape: {input_data.shape}")
+            print(f"Circuit has {len(model.circuit.layers)} layers")
+            print(f"Total gates: {model.circuit.total_gates}")
+            print()
+            
+            # Forward pass
+            output = model(input_data)
+            print(f"Output shape: {output.shape}")
+            print()
+            
+            # Generate ZK proof
+            print("=== Generating Zero-Knowledge Proof ===")
+            proof = model.generate_zk_proof(input_data, output)
+            
+            # Calculate proof size in KB
+            proof_size_kb = len(str(proof)) / 1024.0
+            
+            print(f"Proof generated in {proof['proof_time']:.4f} seconds")
+            print(f"Proof contains {len(proof['layer_commitments'])} layer commitments")
+            print(f"Proof contains {len(proof['sumcheck_proofs'])} sumcheck proofs")
+            print(f"Proof size: {proof_size_kb:.2f} KB")
+            print()
+            
+            # Verify proof
+            print("=== Verifying Zero-Knowledge Proof ===")
+            input_commitment = model._commit_input(input_data)
+            is_valid = model.verify_zk_proof(proof, input_commitment)
+            
+            print(f"Proof verified in {proof['verify_time']:.4f} seconds")
+            print(f"Proof verification result: {'✅ VALID' if is_valid else '❌ INVALID'}")
+            print()
+            
+            # Performance summary
+            print("=== Performance Summary ===")
+            print(f"Prover Time:     {proof['proof_time']:.4f} seconds")
+            print(f"Verifier Time:   {proof['verify_time']:.4f} seconds")
+            print(f"Proof Size:      {proof_size_kb:.2f} KB")
+            print(f"Total Time:      {proof['proof_time'] + proof['verify_time']:.4f} seconds")
+            print()
+        else:
+            print("❌ VGG16 data file not found, using random data")
+    else:
+        print("❌ VGG16 scale file not found, using random data")
     
     return True
 
