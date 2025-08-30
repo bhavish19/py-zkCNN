@@ -1,4 +1,4 @@
-# zkCNN
+# py-zkCNN
 
 # Install on Ubuntu 
 
