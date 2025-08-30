@@ -10,11 +10,11 @@ sudo apt-get install libgmp3-dev cmake gcc g++
 
 ## Introduction
 
-This is the implementation of [this paper](https://eprint.iacr.org/2021/673), which is a GKR-based zero-knowledge proof for CNN reference, containing some common CNN models such as LeNet5, vgg11 and vgg16.
+This is the implementation of [zkCNN paper](https://eprint.iacr.org/2021/673), which is a GKR-based zero-knowledge proof for CNN reference, containing some common CNN models such as LeNet5, vgg11 and vgg16.
 
 ## Implementation Phases
 
-This repository contains three distinct phases of ZKCNN implementation, each with different features and complexity levels:
+This repository contains three distinct phases of py-zkCNN implementation, each with different features and complexity levels:
 
 ### Phase 1: Basic ZKCNN Implementation
 **Location:** `Phase 1/zkCNN_advanced_working.py`
